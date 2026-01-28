@@ -7,7 +7,7 @@ console.log("Stripe Webhook Function Initialized")
 
 serve(async (req) => {
   const signature = req.headers.get("stripe-signature")
-  
+
   if (!signature) {
     return new Response("No signature header", { status: 400 })
   }
@@ -32,7 +32,7 @@ serve(async (req) => {
 
   try {
     const body = await req.text()
-    
+
     // Validando a assinatura do webhook (CRÍTICO para segurança)
     let event
     try {
@@ -43,15 +43,14 @@ serve(async (req) => {
     }
 
     // IDs dos preços que criamos (Isso deve bater com o que foi criado)
-    // Mensal: price_1SuKckCFZo3qHy85O8CUbfMF (prod_Ts4mLM56XCIdvH)
-    // Anual: price_1SuKclCFZo3qHy85xQGw54Z9 (prod_Ts4mJ0pPaYMFjB)
-    const PLAN_MENSAL_PRICE_ID = "price_1SuKckCFZo3qHy85O8CUbfMF"
-    const PLAN_ANUAL_PRICE_ID = "price_1SuKclCFZo3qHy85xQGw54Z9"
+    // IDs dos preços que criamos (Isso deve bater com o que foi criado)
+    const PLAN_MENSAL_PRICE_ID = Deno.env.get("PRICE_ID_MONTHLY") ?? "price_1SuKckCFZo3qHy85O8CUbfMF"
+    const PLAN_ANUAL_PRICE_ID = Deno.env.get("PRICE_ID_YEARLY") ?? "price_1SuKclCFZo3qHy85xQGw54Z9"
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object
       const restaurantId = session.client_reference_id
-      
+
       console.log(`Processing checkout for restaurant: ${restaurantId}`)
 
       if (!restaurantId) {
@@ -64,9 +63,9 @@ serve(async (req) => {
       // mas o webhook padrão pode não trazer expandido. 
       // Se tivermos apenas um item por checkout, podemos tentar inferir pelo amount ou metadata.
       // Melhor ainda: recuperar a sessão expandida ou confiar que o checkout foi montado com o price ID correto.
-      
+
       let daysToAdd = 0
-      
+
       // Tentativa de recuperar linhas para ver o Price ID
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
       const priceId = lineItems.data[0]?.price?.id
@@ -90,8 +89,8 @@ serve(async (req) => {
       // Atualizando Supabase
       const { error } = await supabase
         .from("restaurant")
-        .update({ 
-            subscription_active_until: futureDate.toISOString() 
+        .update({
+          subscription_active_until: futureDate.toISOString()
         })
         .eq("id", restaurantId)
 
