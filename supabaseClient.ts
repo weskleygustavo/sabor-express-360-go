@@ -8,8 +8,8 @@ import { createClient } from '@supabase/supabase-js';
  * 
  * Se deixar vazio, o app funcionará apenas no link do Vercel (onde você configurou o painel).
  */
-const MANUAL_URL = "https://natermviczmlgqcdgiod.supabase.co";
-const MANUAL_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hdGVybXZpY3ptbGdxY2RnaW9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0OTA5NTQsImV4cCI6MjA4NTA2Njk1NH0._NhPgYfTxiq4lqiSW3WMmYujB2LSksexN72-KTy6sXM";
+const MANUAL_URL = "https://zpdmtiqjjqfjlarpjgju.supabase.co";
+const MANUAL_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwZG10aXFqanFmamxhcnBqZ2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MDcwNDYsImV4cCI6MjA4NTE4MzA0Nn0.dV9un3tdtr4IxNZlEmVg-KaMXDh7pgpAc2F_H7o4tAM";
 
 const getEnv = (key: string): string => {
   const viteKey = `VITE_${key}`;
