@@ -36,7 +36,8 @@ serve(async (req) => {
     // Validando a assinatura do webhook (CRÍTICO para segurança)
     let event
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSigningSecret)
+      // Usando AWAIT e constructEventAsync para evitar erro de Crypto síncrono no Edge Runtime
+      event = await stripe.webhooks.constructEventAsync(body, signature, webhookSigningSecret)
     } catch (err) {
       console.error(`Webhook signature verification failed: ${err.message}`)
       return new Response(`Webhook Error: ${err.message}`, { status: 400 })
