@@ -3,7 +3,11 @@ import { useApp } from '../../contexts/AppContext';
 import { ClockIcon, ActivityIcon } from '../icons';
 import { SubscriptionPlansModal } from './SubscriptionPlansModal';
 
-export const SubscriptionStatus: React.FC = () => {
+interface SubscriptionStatusProps {
+    variant?: 'default' | 'mini';
+}
+
+export const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ variant = 'default' }) => {
     const { restaurant, isSubscriptionActive } = useApp();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -32,6 +36,60 @@ export const SubscriptionStatus: React.FC = () => {
 
     const { days, isWarning, isExpired } = subscriptionInfo;
 
+    // Se for MINI (Topo do Sidebar)
+    if (variant === 'mini') {
+        return (
+            <>
+                <div className="w-full flex flex-col items-center justify-center mb-6">
+                    <div
+                        onClick={() => setIsModalOpen(true)}
+                        className={`
+                        cursor-pointer group flex flex-col items-center justify-center 
+                        px-4 py-2 rounded-xl border transition-all duration-300 w-full relative overflow-hidden
+                        ${isExpired
+                                ? 'bg-red-50 border-red-100 hover:bg-red-100'
+                                : isWarning
+                                    ? 'bg-red-50 border-red-200 shadow-sm animate-pulse hover:bg-red-100'
+                                    : 'bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-100 hover:shadow-md'
+                            }
+                    `}>
+                        <div className="flex items-center space-x-1.5 mb-1">
+                            {isWarning || isExpired ? (
+                                <ActivityIcon className={`w-3 h-3 ${isExpired || isWarning ? 'text-red-500' : 'text-indigo-500'}`} />
+                            ) : (
+                                <ClockIcon className="w-3 h-3 text-indigo-500" />
+                            )}
+                            <span className={`text-[8px] font-black uppercase tracking-widest ${isExpired || isWarning ? 'text-red-500' : 'text-indigo-600'}`}>
+                                {isExpired ? 'Expirado' : 'Assinatura'}
+                            </span>
+                        </div>
+
+                        <div className="flex items-baseline space-x-1">
+                            <span className={`text-2xl font-black leading-none ${isExpired || isWarning ? 'text-red-600' : 'text-gray-900 group-hover:text-indigo-600 transition-colors'}`}>
+                                {days > 0 ? days : 0}
+                            </span>
+                            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">
+                                Dias
+                            </span>
+                        </div>
+
+                        {/* Tooltip text on hover/active could be added here if needed, or simple "Renovar" label */}
+                        <div className={`mt-1 text-[8px] font-bold uppercase tracking-wider ${isExpired || isWarning ? 'text-red-500' : 'text-indigo-400 group-hover:text-indigo-600'}`}>
+                            Renovar
+                        </div>
+                    </div>
+                </div>
+
+                <SubscriptionPlansModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    restaurantId={restaurant?.id}
+                />
+            </>
+        );
+    }
+
+    // Default (Antigo - Rodapé)
     return (
         <>
             <div className="px-4 py-2 w-full">

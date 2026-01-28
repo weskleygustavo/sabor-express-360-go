@@ -122,6 +122,9 @@ const AdminSidebar: React.FC<AdminHeaderProps> = ({ currentPage, currentSalesMod
             {/* DESKTOP SIDEBAR */}
             <aside className="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 bg-white border-r border-gray-100 shadow-xl z-50">
                 <div className="p-8 pb-10 flex flex-col items-center text-center cursor-pointer" onClick={() => setPage('dashboard')}>
+                    {/* Subscription Status MINI Variant at the Top */}
+                    <SubscriptionStatus variant="mini" />
+
                     <div className="w-16 h-16 bg-gradient-to-br from-[#FF8C00] to-[#E6005C] rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-pink-100 mb-4 transform hover:rotate-6 transition-all">
                         {restaurant?.name?.[0] || 'S'}
                     </div>
@@ -152,7 +155,7 @@ const AdminSidebar: React.FC<AdminHeaderProps> = ({ currentPage, currentSalesMod
                 </nav>
 
                 <div className="border-t border-gray-50 flex flex-col items-center">
-                    <SubscriptionStatus />
+                    {/* SubscriptionStatus removed from here */}
                     <button
                         onClick={logout}
                         className="w-full flex items-center justify-center space-x-3 px-5 py-4 bg-gray-50 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all font-black text-[11px] uppercase tracking-widest"

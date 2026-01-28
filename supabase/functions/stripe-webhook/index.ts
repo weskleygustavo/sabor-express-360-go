@@ -80,12 +80,34 @@ serve(async (req) => {
         return new Response("Unknown Product", { status: 400 })
       }
 
-      // Calculando nova data
-      const now = new Date()
-      const futureDate = new Date(now)
-      futureDate.setDate(now.getDate() + daysToAdd) // Adiciona os dias
+      // Buscar dados atuais do restaurante para lógica cumulativa
+      const { data: restaurant, error: fetchError } = await supabase
+        .from("restaurant")
+        .select("subscription_active_until")
+        .eq("id", restaurantId)
+        .single()
 
-      console.log(`Adding ${daysToAdd} days to restaurant ${restaurantId}. New date: ${futureDate.toISOString()}`)
+      if (fetchError) {
+        console.error("Error fetching restaurant:", fetchError)
+        // Se falhar ao buscar, assumimos "agora" para não travar, mas logamos erro
+      }
+
+      // Calculando nova data (Lógica Cumulativa)
+      const now = new Date()
+      let baseDate = now
+
+      // Se já tem assinatura ativa no futuro, somamos a partir dela
+      if (restaurant?.subscription_active_until) {
+        const currentActiveUntil = new Date(restaurant.subscription_active_until)
+        if (currentActiveUntil > now) {
+          baseDate = currentActiveUntil
+        }
+      }
+
+      const futureDate = new Date(baseDate)
+      futureDate.setDate(baseDate.getDate() + daysToAdd) // Adiciona os dias somando à base
+
+      console.log(`Adding ${daysToAdd} days to restaurant ${restaurantId}. Base date: ${baseDate.toISOString()}, New date: ${futureDate.toISOString()}`)
 
       // Atualizando Supabase
       const { error } = await supabase
