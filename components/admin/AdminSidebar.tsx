@@ -177,7 +177,10 @@ const AdminSidebar: React.FC<AdminHeaderProps> = ({ currentPage, currentSalesMod
                         <span className="text-[8px] font-black text-[#E6005C] uppercase tracking-widest mt-0.5">{modeLabel}</span>
                     </div>
                 </div>
-                <button onClick={logout} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl active:bg-red-50 active:text-red-500 transition-colors">
+
+                <SubscriptionStatus variant="mobile" />
+
+                <button onClick={logout} className="p-2.5 bg-gray-50 text-gray-400 rounded-xl active:bg-red-50 active:text-red-500 transition-colors ml-2">
                     <LogOutIcon className="w-5 h-5" />
                 </button>
             </header>

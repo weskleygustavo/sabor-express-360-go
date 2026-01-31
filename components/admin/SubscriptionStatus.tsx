@@ -4,7 +4,7 @@ import { ClockIcon, ActivityIcon } from '../icons';
 import { SubscriptionPlansModal } from './SubscriptionPlansModal';
 
 interface SubscriptionStatusProps {
-    variant?: 'default' | 'mini';
+    variant?: 'default' | 'mini' | 'mobile';
 }
 
 export const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ variant = 'default' }) => {
@@ -77,6 +77,46 @@ export const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ variant 
                         <div className={`mt-1 text-[8px] font-bold uppercase tracking-wider ${isExpired || isWarning ? 'text-red-500' : 'text-indigo-400 group-hover:text-indigo-600'}`}>
                             Renovar
                         </div>
+                    </div>
+                </div>
+
+                <SubscriptionPlansModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    restaurantId={restaurant?.id}
+                />
+            </>
+        );
+    }
+
+    // Mobile (Topo do Header Mobile)
+    if (variant === 'mobile') {
+        return (
+            <>
+                <div
+                    onClick={() => setIsModalOpen(true)}
+                    className={`
+                    cursor-pointer flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border transition-all duration-300 ml-auto mr-2
+                    ${isExpired
+                            ? 'bg-red-50 border-red-100'
+                            : isWarning
+                                ? 'bg-red-50 border-red-200 animate-pulse'
+                                : 'bg-indigo-50 border-indigo-100'
+                        }
+                `}>
+                    {isWarning || isExpired ? (
+                        <ActivityIcon className={`w-3.5 h-3.5 ${isExpired || isWarning ? 'text-red-500' : 'text-indigo-500'}`} />
+                    ) : (
+                        <ClockIcon className="w-3.5 h-3.5 text-indigo-500" />
+                    )}
+
+                    <div className="flex items-baseline space-x-1">
+                        <span className={`text-sm font-black leading-none ${isExpired || isWarning ? 'text-red-600' : 'text-gray-900'}`}>
+                            {days > 0 ? days : 0}
+                        </span>
+                        <span className={`text-[9px] font-bold uppercase tracking-wider ${isExpired || isWarning ? 'text-red-400' : 'text-indigo-400'}`}>
+                            Dias
+                        </span>
                     </div>
                 </div>
 
